@@ -7,6 +7,7 @@ export default class SearchBar extends Component {
     super();
     this.inputRef = React.createRef();
     this.state = {
+      loading: true,
       artists: null
     };
   }
@@ -18,20 +19,18 @@ export default class SearchBar extends Component {
   }
 
   queryStr(spaceString) {
-    return spaceString.split(" ").join("+");
+    return spaceString.replace(" ", "+");
   }
 
   makeQuery(searchCriteria) {
-    return fetch(
+    fetch(
       `https://react-api-lab.herokuapp.com/search?query=${this.queryStr(
         searchCriteria
       )}`
     )
-      .then(r => r.json())
-      .then(r => {
-        const artists = r.data;
-        this.setState({ artists });
-        return r.data;
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ loading: false, artists: data.data });
       })
       .catch(e => console.log(e));
   }
