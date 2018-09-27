@@ -6,6 +6,7 @@ export default class Playlist extends Component {
     this.userName = "@pablo";
     this.getList();
     this.state = {
+      loading: true,
       playList: null
     };
   }
@@ -15,17 +16,18 @@ export default class Playlist extends Component {
       this.userName
     }`;
     fetch(url)
-      .then(r => r.json())
-      .then(r => {
-        const playlist = r.data;
-        this.setState({ playlist });
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          loading: false,
+          playlist: data.data
+        });
       })
-      .catch(e => console.log(e));
+      .catch(error => console.log(error));
   }
 
   render() {
     const { playlist } = this.state;
-    console.log(playlist);
 
     return (
       <div className="row">

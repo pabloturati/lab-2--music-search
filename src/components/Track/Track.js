@@ -14,10 +14,10 @@ export default class Track extends Component {
         "Content-Type": "application/json"
       }
     })
-      .then(res => {
-        return res;
+      .then(response => {
+        return response;
       })
-      .catch(err => err);
+      .catch(error => console.log(error));
   }
 
   render() {

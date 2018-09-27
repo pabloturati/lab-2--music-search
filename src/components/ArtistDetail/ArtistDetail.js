@@ -5,27 +5,31 @@ import AlbumCard from "../AlbumCard";
 export default class ArtistDetail extends Component {
   constructor(props) {
     super(props);
-    this.artistId = this.props.match.params.artistId;
-    this.getArtistData();
+    this.artistId = "";
     this.state = {
+      loading: true,
       artistData: {}
     };
   }
 
+  componentDidMount() {
+    this.setArtistId();
+    this.getArtistData();
+  }
+
+  setArtistId() {
+    this.artistId = this.props.match.params.artistId;
+  }
+
   getArtistData() {
     fetch(`https://react-api-lab.herokuapp.com/artists/${this.artistId}`)
-      .then(res => res.json())
-      .then(res => {
+      .then(response => response.json())
+      .then(data => {
         this.setState({
-          artistData: res.data
+          loading: false,
+          artistData: data.data
         });
       })
-      .catch(e => console.log(e));
-  }
-  getAlbumData() {
-    fetch()
-      .then(res => res.json())
-      .then(res => console.log(res))
       .catch(e => console.log(e));
   }
 

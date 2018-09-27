@@ -4,38 +4,46 @@ import Track from "../Track";
 export default class AlbumDetail extends Component {
   constructor(props) {
     super(props);
-    this.albumId = this.props.match.params.albumId;
-    this.fetchAlbum();
+    this.albumId = "";
     this.state = {
+      loading: true,
       album: ""
     };
   }
 
+  componentDidMount() {
+    this.setAlbumId();
+    this.fetchAlbum();
+  }
+
+  setAlbumId() {
+    this.albumId = this.props.match.params.albumId;
+  }
+
   fetchAlbum() {
     fetch(`https://react-api-lab.herokuapp.com/albums/${this.albumId}`)
-      .then(r => r.json())
-      .then(res => {
-        const album = res.data;
-        this.setState({ album });
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          loading: false,
+          album: data.data
+        });
       })
       .catch(e => console.log(e));
   }
 
   render() {
-    const { tracks } = this.state.album;
+    const { tracks, name, imageUrl } = this.state.album;
+
     return (
       <div className="row">
         <div className="col-12">
           <div className="row mb-5">
             <div className="col-3">
-              <img
-                className="img-fluid"
-                src="https://lastfm-img2.akamaized.net/i/u/300x300/394cfbc6b2a74766a4364778c641ca51.png"
-                alt="Album Cover"
-              />
+              <img className="img-fluid" src={imageUrl} alt="Album Cover" />
             </div>
             <div className="col-9">
-              <h2>Wish You Were Here</h2>
+              <h2>{name}</h2>
             </div>
           </div>
           <h2>TRACKS:</h2>
